@@ -1,10 +1,10 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.List;
 import java.util.regex.*;
+import javax.swing.*;
 
 public class ChemicalGFMCalculatorTestBuild {
     // Atomic weights of elements (g/mol) - preserved from GFM calculator
@@ -160,6 +160,17 @@ public class ChemicalGFMCalculatorTestBuild {
 
     public static void main(String[] args) {
         // Build GUI
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         JFrame frame = new JFrame("Chemistry Tool - By: Jacob Wyrozebski");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
@@ -1061,6 +1072,15 @@ public class ChemicalGFMCalculatorTestBuild {
             sum += c.composition.getOrDefault(element, 0);
         }
         return sum;
+    }
+
+    static class HalfReaction {
+        Compound reactant;
+        Compound product;
+        List<Compound> leftExtras = new ArrayList<>();
+        List<Compound> rightExtras = new ArrayList<>();
+        int electrons;
+        boolean electronsOnLeft;
     }
 
     // Format half-reaction for output
