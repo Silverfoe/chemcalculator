@@ -138,7 +138,9 @@ public class ChemicalGFMCalculatorTestBuild {
             BigInteger newDen = this.den.multiply(other.num);
             return new Fraction(newNum, newDen);
         }
+        @SuppressWarnings("unused")
         public BigInteger getNum() { return num; }
+        @SuppressWarnings("unused")
         public BigInteger getDen() { return den; }
         @Override
         public String toString() {
@@ -158,6 +160,7 @@ public class ChemicalGFMCalculatorTestBuild {
         }
     }
 
+    @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
     public static void main(String[] args) {
         // Build GUI
         try {
@@ -257,66 +260,57 @@ public class ChemicalGFMCalculatorTestBuild {
         frame.setVisible(true);
 
         // Action Listeners for buttons
-        balanceButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String eq = eqField.getText().trim();
-                if (eq.isEmpty()) {
-                    return;
-                }
-                List<String> steps = balanceChemicalEquation(eq);
-                // Display steps in output area
-                balanceOutput.setText("");
-                for (String step : steps) {
-                    balanceOutput.append(step + "\n");
-                }
+        balanceButton.addActionListener((ActionEvent e) -> {
+            String eq = eqField.getText().trim();
+            if (eq.isEmpty()) {
+                return;
+            }
+            List<String> steps = balanceChemicalEquation(eq);
+            // Display steps in output area
+            balanceOutput.setText("");
+            for (String step : steps) {
+                balanceOutput.append(step + "\n");
             }
         });
-        gfmButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String input = gfmField.getText().trim();
-                if (input.isEmpty()) {
-                    return;
-                }
-                StringBuilder result = new StringBuilder();
-                String[] formulas = input.split("\\s*,\\s*");
-                for (String formula : formulas) {
-                    if (formula.isEmpty()) continue;
-                    result.append("Formula: " + formula + "\n");
-                    try {
-                        Map<String,Integer> comp = parseFormulaComposition(formula);
-                        double totalMass = 0.0;
-                        for (Map.Entry<String,Integer> entry : comp.entrySet()) {
-                            String element = entry.getKey();
-                            int count = entry.getValue();
-                            double atomicMass = atomicWeights.getOrDefault(element, 0.0);
-                            double mass = atomicMass * count;
-                            totalMass += mass;
-                            result.append("  " + element + ": " + String.format("%.3f", mass) + " g/mol (x" + count + ")\n");
-                        }
-                        result.append("  Total GFM: " + String.format("%.3f", totalMass) + " g/mol\n\n");
-                    } catch (Exception ex) {
-                        result.append("  Error parsing formula.\n\n");
-                    }
-                }
-                gfmOutput.setText(result.toString());
+        gfmButton.addActionListener((ActionEvent e) -> {
+            String input = gfmField.getText().trim();
+            if (input.isEmpty()) {
+                return;
             }
-        });
-        nameButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String formula = nameField.getText().trim();
-                if (formula.isEmpty()) {
-                    return;
-                }
+            StringBuilder result = new StringBuilder();
+            String[] formulas = input.split("\\s*,\\s*");
+            for (String formula : formulas) {
+                if (formula.isEmpty()) continue;
+                result.append("Formula: " + formula + "\n");
                 try {
-                    Compound comp = parseCompound(formula);
-                    String name = nameCompound(comp);
-                    nameOutput.setText(name);
+                    Map<String,Integer> comp = parseFormulaComposition(formula);
+                    double totalMass = 0.0;
+                    for (Map.Entry<String,Integer> entry : comp.entrySet()) {
+                        String element = entry.getKey();
+                        int count = entry.getValue();
+                        double atomicMass = atomicWeights.getOrDefault(element, 0.0);
+                        double mass = atomicMass * count;
+                        totalMass += mass;
+                        result.append("  " + element + ": " + String.format("%.3f", mass) + " g/mol (x" + count + ")\n");
+                    }
+                    result.append("  Total GFM: " + String.format("%.3f", totalMass) + " g/mol\n\n");
                 } catch (Exception ex) {
-                    nameOutput.setText("Unable to name the compound. Please check the formula.");
+                    result.append("  Error parsing formula.\n\n");
                 }
+            }
+            gfmOutput.setText(result.toString());
+        });
+        nameButton.addActionListener((ActionEvent e) -> {
+            String formula = nameField.getText().trim();
+            if (formula.isEmpty()) {
+                return;
+            }
+            try {
+                Compound comp = parseCompound(formula);
+                String name = nameCompound(comp);
+                nameOutput.setText(name);
+            } catch (Exception ex) {
+                nameOutput.setText("Unable to name the compound. Please check the formula.");
             }
         });
     }
@@ -445,15 +439,7 @@ public class ChemicalGFMCalculatorTestBuild {
                 // already in both, do nothing
             }
         }
-        // Prepare half-reactions
-        class HalfReaction {
-            Compound reactant;
-            Compound product;
-            List<Compound> leftExtras = new ArrayList<>();
-            List<Compound> rightExtras = new ArrayList<>();
-            int electrons = 0;
-            boolean electronsOnLeft = false;
-        }
+        
         List<HalfReaction> halfReactions = new ArrayList<>();
         if (oxidizedElements.size() == 1 && reducedElements.size() == 1 && oxidizedElements.get(0).equals(reducedElements.get(0))) {
             // Disproportionation: one element is both oxidized and reduced
@@ -685,6 +671,7 @@ public class ChemicalGFMCalculatorTestBuild {
     }
 
     // Balance non-redox reaction using linear algebra (matrix method)
+    @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
     private static List<String> balanceNonRedoxReaction(List<Compound> reactants, List<Compound> products) {
         List<String> steps = new ArrayList<>();
         // Combine all compounds and list all elements
@@ -918,6 +905,7 @@ public class ChemicalGFMCalculatorTestBuild {
     }
 
     // Compute oxidation numbers for each element in a compound
+    @SuppressWarnings("SizeReplaceableByIsEmpty")
     private static Map<String,Integer> assignOxidationNumbers(Compound comp) {
         Map<String,Integer> oxMap = new HashMap<>();
         Map<String,Integer> compMap = comp.composition;
@@ -1074,13 +1062,14 @@ public class ChemicalGFMCalculatorTestBuild {
         return sum;
     }
 
+    // Prepare half-reactions                               Return Here and upgrade eventually?     - Just fixed this POS!!!
     static class HalfReaction {
         Compound reactant;
         Compound product;
         List<Compound> leftExtras = new ArrayList<>();
         List<Compound> rightExtras = new ArrayList<>();
-        int electrons;
-        boolean electronsOnLeft;
+        int electrons = 0;
+        boolean electronsOnLeft = false;
     }
 
     // Format half-reaction for output
@@ -1127,6 +1116,7 @@ public class ChemicalGFMCalculatorTestBuild {
         }
     }
     // Format full equation from left and right species maps
+    @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
     private static String formatEquation(Map<String,Integer> left, Map<String,Integer> right) {
         StringBuilder sb = new StringBuilder();
         boolean firstTerm = true;
@@ -1285,6 +1275,7 @@ public class ChemicalGFMCalculatorTestBuild {
     }
 
     // Generate a name for a given Compound
+    @SuppressWarnings("ConvertToStringSwitch")
     private static String nameCompound(Compound comp) {
         // Check for acids
         if (comp.composition.containsKey("H")) {
@@ -1488,18 +1479,18 @@ public class ChemicalGFMCalculatorTestBuild {
     }
 
     private static String prefixForNumber(int n) {
-        switch(n) {
-            case 1: return "mono";
-            case 2: return "di";
-            case 3: return "tri";
-            case 4: return "tetra";
-            case 5: return "penta";
-            case 6: return "hexa";
-            case 7: return "hepta";
-            case 8: return "octa";
-            case 9: return "nona";
-            case 10: return "deca";
-            default: return "";
-        }
+        return switch (n) {
+            case 1 -> "mono";
+            case 2 -> "di";
+            case 3 -> "tri";
+            case 4 -> "tetra";
+            case 5 -> "penta";
+            case 6 -> "hexa";
+            case 7 -> "hepta";
+            case 8 -> "octa";
+            case 9 -> "nona";
+            case 10 -> "deca";
+            default -> "";
+        };
     }
 }
