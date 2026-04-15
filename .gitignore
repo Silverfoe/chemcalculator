@@ -1,1 +1,8 @@
-l4j.xml
+*.class
+*.log
+.gradle/
+.idea/
+build/
+out/
+dist/
+*.iml

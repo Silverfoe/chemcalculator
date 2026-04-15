@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: blob: file:;">
+    <title>Structure Viewer</title>
+    <link rel="stylesheet" href="./structure-viewer.css">
+  </head>
+  <body>
+    <div class="viewport">
+      <div id="viewer" class="viewer"></div>
+      <div id="overlay" class="overlay">
+        <div id="overlay-title" class="overlay-title">No structure loaded</div>
+        <div id="overlay-detail" class="overlay-detail">Load a formula, SMILES, Molfile/SDF, or InChI to populate the viewer.</div>
+      </div>
+      <div id="messages" class="messages"></div>
+    </div>
+    <script src="./vendor/3Dmol-min.js"></script>
+    <script src="./structure-viewer.js"></script>
+  </body>
+</html>

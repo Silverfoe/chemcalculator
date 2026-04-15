@@ -1,0 +1,5 @@
+id|title|revision|url
+PUBCHEM|PubChem Periodic Table snapshot|2026-04-13|https://pubchem.ncbi.nlm.nih.gov/ptable/
+CIAAW|CIAAW Atomic Weights reference|2026-04-13|https://www.ciaaw.org/atomic-weights.htm
+INTERNAL|Initial offline bootstrap snapshot|2026-04-13|local
+PUBCHEM_COMPOUNDS|PubChem compound structure snapshot|2026-04-14|https://pubchem.ncbi.nlm.nih.gov/
